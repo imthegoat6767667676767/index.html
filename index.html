@@ -22,7 +22,7 @@ body {
   align-items: center;
 }
 
-/* CINEMATIC CARD */
+/* CARD SYSTEM */
 .card {
   width: 92%;
   max-width: 540px;
@@ -47,6 +47,7 @@ body {
   pointer-events: auto;
 }
 
+/* TEXT */
 h1 { font-size: 32px; margin-bottom: 10px; }
 h2 { font-size: 22px; font-weight: 400; }
 
@@ -56,6 +57,7 @@ p {
   color: #222;
 }
 
+/* IMAGE */
 img {
   width: 240px;
   border-radius: 18px;
@@ -75,7 +77,7 @@ button {
 }
 
 button:hover {
-  transform: scale(1.08);
+  transform: scale(1.07);
 }
 
 .primary {
@@ -88,7 +90,7 @@ button:hover {
   position: fixed;
 }
 
-/* FLOATING HEARTS */
+/* EFFECTS */
 .heart {
   position: fixed;
   font-size: 18px;
@@ -101,12 +103,10 @@ button:hover {
   100% { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* CONFETTI */
 .confetti {
   position: fixed;
   width: 8px;
   height: 8px;
-  background: #ff4d88;
   top: -10px;
   animation: fall 3s linear forwards;
 }
@@ -116,19 +116,6 @@ button:hover {
     transform: translateY(110vh) rotate(720deg);
     opacity: 0;
   }
-}
-
-/* TYPE EFFECT */
-.type {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid #333;
-  width: 0;
-  animation: typing 2s steps(40) forwards;
-}
-
-@keyframes typing {
-  to { width: 100%; }
 }
 
 </style>
@@ -153,13 +140,13 @@ button:hover {
   <h2>Do you like me?</h2>
 
   <button class="primary" onclick="yes1()">Yes</button>
-  <button class="secondary" id="no1">No</button>
+  <button class="secondary" onclick="no1()">No</button>
 </div>
 
 <!-- SCREEN 3 -->
 <div class="card" id="s3">
-  <h1 class="type" id="msg1">That makes me really happy...</h1>
-  <p id="msg2"></p>
+  <h1>That makes me happy</h1>
+  <p>i really appreciate you.</p>
 
   <button class="primary" onclick="next2()">Continue</button>
 </div>
@@ -170,15 +157,34 @@ button:hover {
   <h2>May I be your boyfriend?</h2>
 
   <button class="primary" onclick="finalYes()">Yes 💕</button>
-  <button class="secondary" id="no2">No</button>
+  <button class="secondary" onclick="finalNo()">No</button>
 </div>
 
-<!-- FINAL -->
+<!-- SCREEN 5 (FINAL YES) -->
 <div class="card" id="s5">
   <h1>💖</h1>
+
   <p>
-    thank you for everything.<br><br>
-    you genuinely mean a lot to me.
+    vis, thank you for everything you do for me and for always being there for me.<br><br>
+
+    i really love you, my baby.<br><br>
+
+    i just want you to be happy every time you’re with me.<br><br>
+
+    you make my days so much better, and i hope you always keep that smile of yours because it’s irreplaceable.<br><br>
+
+    and yeah… my bike might still hit you 😭 but i’ll always be there for you.<br><br>
+
+    i’m never leaving you. ❤️
+  </p>
+</div>
+
+<!-- SCREEN 6 (FINAL NO) -->
+<div class="card" id="s6">
+  <h1>It’s okay 💭</h1>
+  <p>
+    I understand.<br><br>
+    I still really appreciate you for being honest with me.
   </p>
 </div>
 
@@ -186,62 +192,22 @@ button:hover {
 
 let stage = 1;
 
-/* SCREEN SWITCH */
 function show(id) {
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* START */
+/* FLOW */
 function next() {
   stage = 2;
   show("s2");
 }
 
-/* NO BUTTON SMART AVOID */
-function dodge(btn, activeStage) {
-  document.addEventListener("mousemove", (e) => {
-    if (stage !== activeStage) return;
-
-    const rect = btn.getBoundingClientRect();
-    const dx = rect.x - e.clientX;
-    const dy = rect.y - e.clientY;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-
-    if (dist < 130) {
-      btn.style.left = rect.x + dx * 0.15 + "px";
-      btn.style.top = rect.y + dy * 0.15 + "px";
-    }
-  });
-}
-
-const no1 = document.getElementById("no1");
-const no2 = document.getElementById("no2");
-dodge(no1, 2);
-dodge(no2, 4);
-
-/* YES FLOW */
 function yes1() {
   stage = 3;
   show("s3");
-
-  typeText();
 }
 
-/* TYPEWRITER TEXT */
-function typeText() {
-  const msg = "i really appreciate you more than you know.";
-  const el = document.getElementById("msg2");
-
-  let i = 0;
-  const interval = setInterval(() => {
-    el.innerHTML += msg[i];
-    i++;
-    if (i >= msg.length) clearInterval(interval);
-  }, 40);
-}
-
-/* CONTINUE */
 function next2() {
   stage = 4;
   show("s4");
@@ -254,7 +220,23 @@ function finalYes() {
 
   hearts();
   confetti();
-  music();
+}
+
+/* FINAL NO */
+function finalNo() {
+  stage = 6;
+  show("s6");
+}
+
+/* SCREEN 2 NO */
+function no1() {
+  stage = 6;
+  show("s6");
+
+  setTimeout(() => {
+    stage = 4;
+    show("s4");
+  }, 2500);
 }
 
 /* HEARTS */
@@ -268,13 +250,13 @@ function hearts() {
       h.style.top = "80vh";
       document.body.appendChild(h);
       setTimeout(() => h.remove(), 4000);
-    }, i * 40);
+    }, i * 35);
   }
 }
 
 /* CONFETTI */
 function confetti() {
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 70; i++) {
     setTimeout(() => {
       const c = document.createElement("div");
       c.className = "confetti";
@@ -284,32 +266,6 @@ function confetti() {
       setTimeout(() => c.remove(), 3000);
     }, i * 20);
   }
-}
-
-/* SIMPLE BACKGROUND MUSIC (NO FILES) */
-function music() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  const ctx = new AudioContext();
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = "sine";
-  osc.frequency.value = 220;
-
-  gain.gain.value = 0.03;
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start();
-
-  // soft rising tone
-  let freq = 220;
-  setInterval(() => {
-    freq += 1;
-    osc.frequency.value = freq;
-  }, 200);
 }
 
 </script>
