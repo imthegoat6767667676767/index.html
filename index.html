@@ -1,102 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>For Vis 💕</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-  text-align: center;
-  overflow: hidden;
-}
-
-.container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: fadeIn 1.5s ease;
-  width: 90%;
-  max-width: 500px;
-}
-
-h1 { font-size: 38px; }
-p { font-size: 18px; }
-
-img {
-  width: 250px;
-  border-radius: 20px;
-  margin-top: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-button {
-  padding: 15px 30px;
-  font-size: 18px;
-  border: none;
-  border-radius: 30px;
-  margin: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-#startBtn, #yes {
-  background: #ff4d88;
-  color: white;
-}
-
-#no {
-  background: white;
-  position: absolute;
-}
-
-button:hover {
-  transform: scale(1.1);
-}
-
-@keyframes fadeIn {
-  from {opacity: 0; transform: translate(-50%, -60%);}
-  to {opacity: 1; transform: translate(-50%, -50%);}
-}
-
-/* 💖 hearts */
-.heart {
-  position: fixed;
-  bottom: -10px;
-  font-size: 20px;
-  animation: floatUp 4s linear infinite;
-}
-
-@keyframes floatUp {
-  0% {transform: translateY(0); opacity:1;}
-  100% {transform: translateY(-100vh); opacity:0;}
-}
-</style>
-</head>
-
-<body>
-
-<div class="container" id="main">
-  <h1>Hey Vis 💕</h1>
-  <p>I made something for you…</p>
-
-  <img src="https://i.imgur.com/KR7PCEs.jpeg">
-
-  <br><br>
-  <button id="startBtn" onclick="start()">Click me 😳</button>
-</div>
-
 <script>
 function start() {
   document.body.innerHTML = `
     <div class="container">
       <h1>Be honest… 💭</h1>
       <h2>Do you like me?</h2>
-      <button id="yes" onclick="yes()">Yes 😍</button>
+      <button id="yes" onclick="step2()">Yes 😍</button>
       <button id="no" onmouseover="moveNo()">No 🙄</button>
+    </div>
+  `;
+}
+
+function step2() {
+  document.body.innerHTML = `
+    <div class="container">
+      <h1>Okay… one more thing :)</h1>
+      <h2>May i be your Boyfriend?</h2>
+      <button id="yes" onclick="yes()">Yes 💕</button>
+      <button id="no" onmouseover="moveNo()">No 😐</button>
     </div>
   `;
 }
@@ -113,7 +33,7 @@ function yes() {
   document.body.innerHTML = `
     <div class="container">
       <h1>Vis 💖</h1>
-      <h1>You're mine now 😭💕</h1>
+      <h1>You're mine now 💕</h1>
 
       <p style="margin-top:25px;">
       vis, thank you for everything you do for me and for always being there for me. <br><br>
@@ -126,7 +46,7 @@ function yes() {
     </div>
   `;
 
-  // 💖 hearts effect
+  // 💖 hearts
   setInterval(() => {
     let heart = document.createElement("div");
     heart.className = "heart";
@@ -135,12 +55,7 @@ function yes() {
     heart.style.fontSize = (Math.random() * 20 + 15) + "px";
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-      heart.remove();
-    }, 4000);
+    setTimeout(() => heart.remove(), 4000);
   }, 300);
 }
 </script>
-
-</body>
-</html>
