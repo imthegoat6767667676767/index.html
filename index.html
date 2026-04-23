@@ -1,61 +1,200 @@
-<script>
-function start() {
-  document.body.innerHTML = `
-    <div class="container">
-      <h1>Be honest… 💭</h1>
-      <h2>Do you like me?</h2>
-      <button id="yes" onclick="step2()">Yes 😍</button>
-      <button id="no" onmouseover="moveNo()">No 🙄</button>
-    </div>
-  `;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Vis 💕</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  text-align: center;
+  overflow: hidden;
 }
 
-function step2() {
-  document.body.innerHTML = `
-    <div class="container">
-      <h1>Okay… one more thing :)</h1>
-      <h2>May i be your Boyfriend?</h2>
-      <button id="yes" onclick="yes()">Yes 💕</button>
-      <button id="no" onmouseover="moveNo()">No 😐</button>
-    </div>
-  `;
+/* SCREEN SYSTEM */
+.screen {
+  display: none;
+  height: 100vh;
+  width: 100%;
 }
 
-function moveNo() {
-  let btn = document.getElementById("no");
-  let x = Math.random() * (window.innerWidth - 100);
-  let y = Math.random() * (window.innerHeight - 50);
-  btn.style.left = x + "px";
-  btn.style.top = y + "px";
+.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-function yes() {
-  document.body.innerHTML = `
-    <div class="container">
-      <h1>Vis 💖</h1>
-      <h1>You're mine now 💕</h1>
+/* MAIN CONTAINER */
+.container {
+  width: 90%;
+  max-width: 500px;
+}
 
-      <p style="margin-top:25px;">
-      vis, thank you for everything you do for me and for always being there for me. <br><br>
-      i really love you, my baby. <br><br>
-      i just want you to be happy every time you’re with me. <br><br>
-      you make my days so much better, and i hope you always keep that smile of yours because it’s irreplaceable. <br><br>
+/* TEXT */
+h1 { font-size: 38px; }
+h2 { font-size: 26px; }
+p { font-size: 18px; }
+
+/* IMAGE */
+img {
+  width: 250px;
+  border-radius: 20px;
+  margin-top: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* BUTTONS */
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+#startBtn, #yes {
+  background: #ff4d88;
+  color: white;
+}
+
+#no {
+  background: white;
+  position: fixed;
+}
+
+/* HEARTS */
+.heart {
+  position: fixed;
+  bottom: -10px;
+  font-size: 20px;
+  animation: floatUp 4s linear forwards;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* FADE */
+.fade {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* MOBILE SAFETY */
+@media (max-width: 600px) {
+  h1 { font-size: 28px; }
+  img { width: 200px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCREEN 1 -->
+<div class="screen active" id="screen1">
+  <div class="container fade">
+    <h1>Hey Vis 💕</h1>
+    <p>I made something for you…</p>
+
+    <!-- PUT DIRECT IMAGE LINK HERE -->
+    <img src="YOUR_DIRECT_IMAGE_LINK.jpg">
+
+    <br><br>
+    <button id="startBtn" onclick="start()">Click me 😳</button>
+  </div>
+</div>
+
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+  <div class="container fade">
+    <h1>Be honest… 💭</h1>
+    <h2>Do you like me?</h2>
+
+    <button id="yes" onclick="yes()">Yes 😍</button>
+    <button id="no">No 🙄</button>
+  </div>
+</div>
+
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+  <div class="container fade">
+    <h1>Vis 💖</h1>
+    <h1>You’re mine now 😭💕</h1>
+
+    <p style="margin-top:25px;">
+      vis, thank you for everything you do for me and for always being there. <br><br>
+      i really love you. <br><br>
+      you make my days better every time we talk. <br><br>
       and yeah… my bike might still hit you 😭 but i’ll always be there for you. <br><br>
       i’m never leaving you. ❤️
-      </p>
-    </div>
-  `;
+    </p>
+  </div>
+</div>
 
-  // 💖 hearts
-  setInterval(() => {
+<script>
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* STEP 1 -> STEP 2 */
+function start() {
+  showScreen("screen2");
+}
+
+/* RUNAWAY BUTTON */
+const noBtn = document.getElementById("no");
+
+noBtn.addEventListener("mouseover", moveNo);
+
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+/* YES SCREEN + HEARTS */
+function yes() {
+  showScreen("screen3");
+  startHearts();
+}
+
+/* HEART EFFECT (OPTIMIZED) */
+function startHearts() {
+  const interval = setInterval(() => {
     let heart = document.createElement("div");
     heart.className = "heart";
     heart.innerHTML = "💖";
+
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+
     document.body.appendChild(heart);
 
     setTimeout(() => heart.remove(), 4000);
-  }, 300);
+  }, 400);
+
+  // stop after 10 seconds so it doesn't lag
+  setTimeout(() => clearInterval(interval), 10000);
 }
+
 </script>
+
+</body>
+</html>
