@@ -15,58 +15,67 @@
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  overflow: hidden;
+  background: radial-gradient(circle at top, #ffd6e0, #ee9ca7);
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
+/* CINEMATIC CARD */
 .card {
   width: 92%;
-  max-width: 520px;
-  padding: 30px;
-  border-radius: 25px;
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  max-width: 540px;
+  padding: 32px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.18);
   text-align: center;
+
   position: absolute;
   opacity: 0;
-  transform: translateY(20px);
+  transform: scale(0.96) translateY(20px);
   pointer-events: none;
-  transition: 0.5s ease;
+
+  transition: all 0.6s ease;
 }
 
 .card.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1) translateY(0);
   pointer-events: auto;
 }
 
-h1 { font-size: 32px; }
+h1 { font-size: 32px; margin-bottom: 10px; }
 h2 { font-size: 22px; font-weight: 400; }
-p  { font-size: 16px; }
+
+p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #222;
+}
 
 img {
   width: 240px;
   border-radius: 18px;
   margin-top: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
 }
 
+/* BUTTONS */
 button {
   padding: 12px 26px;
-  font-size: 16px;
+  font-size: 15px;
   border: none;
   border-radius: 30px;
   margin: 10px;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: 0.2s ease;
 }
 
 button:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .primary {
@@ -76,15 +85,14 @@ button:hover {
 
 .secondary {
   background: white;
-  color: #333;
   position: fixed;
 }
 
-/* hearts */
+/* FLOATING HEARTS */
 .heart {
   position: fixed;
   font-size: 18px;
-  animation: floatUp 3.5s linear forwards;
+  animation: floatUp 4s linear forwards;
   pointer-events: none;
 }
 
@@ -92,6 +100,37 @@ button:hover {
   0% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(-120vh); opacity: 0; }
 }
+
+/* CONFETTI */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: #ff4d88;
+  top: -10px;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* TYPE EFFECT */
+.type {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #333;
+  width: 0;
+  animation: typing 2s steps(40) forwards;
+}
+
+@keyframes typing {
+  to { width: 100%; }
+}
+
 </style>
 </head>
 
@@ -113,16 +152,16 @@ button:hover {
   <h1>Be honest</h1>
   <h2>Do you like me?</h2>
 
-  <button class="primary" onclick="yes()">Yes</button>
-  <button class="secondary" id="noBtn">No</button>
+  <button class="primary" onclick="yes1()">Yes</button>
+  <button class="secondary" id="no1">No</button>
 </div>
 
 <!-- SCREEN 3 -->
 <div class="card" id="s3">
-  <h1>That made me happy</h1>
-  <p>I really appreciate you.</p>
+  <h1 class="type" id="msg1">That makes me really happy...</h1>
+  <p id="msg2"></p>
 
-  <button class="primary" onclick="finalAsk()">Continue</button>
+  <button class="primary" onclick="next2()">Continue</button>
 </div>
 
 <!-- SCREEN 4 -->
@@ -131,95 +170,149 @@ button:hover {
   <h2>May I be your boyfriend?</h2>
 
   <button class="primary" onclick="finalYes()">Yes 💕</button>
-  <button class="secondary" id="noBtn2">No</button>
+  <button class="secondary" id="no2">No</button>
 </div>
 
 <!-- FINAL -->
 <div class="card" id="s5">
   <h1>💖</h1>
   <p>
-    thank you for making me happy.<br><br>
-    you mean a lot to me.
+    thank you for everything.<br><br>
+    you genuinely mean a lot to me.
   </p>
 </div>
 
 <script>
 
+let stage = 1;
+
+/* SCREEN SWITCH */
 function show(id) {
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* FLOW */
+/* START */
 function next() {
+  stage = 2;
   show("s2");
 }
 
-/* NO RUNAWAY (SCREEN 2) */
-const noBtn = document.getElementById("noBtn");
+/* NO BUTTON SMART AVOID */
+function dodge(btn, activeStage) {
+  document.addEventListener("mousemove", (e) => {
+    if (stage !== activeStage) return;
 
-document.addEventListener("mousemove", (e) => {
-  const rect = noBtn.getBoundingClientRect();
-  const dx = rect.x - e.clientX;
-  const dy = rect.y - e.clientY;
-  const dist = Math.sqrt(dx*dx + dy*dy);
+    const rect = btn.getBoundingClientRect();
+    const dx = rect.x - e.clientX;
+    const dy = rect.y - e.clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
 
-  if (dist < 120) {
-    noBtn.style.left = rect.x + (dx / dist) * 50 + "px";
-    noBtn.style.top = rect.y + (dy / dist) * 50 + "px";
-  }
-});
+    if (dist < 130) {
+      btn.style.left = rect.x + dx * 0.15 + "px";
+      btn.style.top = rect.y + dy * 0.15 + "px";
+    }
+  });
+}
 
-/* YES */
-function yes() {
+const no1 = document.getElementById("no1");
+const no2 = document.getElementById("no2");
+dodge(no1, 2);
+dodge(no2, 4);
+
+/* YES FLOW */
+function yes1() {
+  stage = 3;
   show("s3");
+
+  typeText();
+}
+
+/* TYPEWRITER TEXT */
+function typeText() {
+  const msg = "i really appreciate you more than you know.";
+  const el = document.getElementById("msg2");
+
+  let i = 0;
+  const interval = setInterval(() => {
+    el.innerHTML += msg[i];
+    i++;
+    if (i >= msg.length) clearInterval(interval);
+  }, 40);
 }
 
 /* CONTINUE */
-function finalAsk() {
+function next2() {
+  stage = 4;
   show("s4");
 }
 
-/* NO 2 */
-const noBtn2 = document.getElementById("noBtn2");
-
-document.addEventListener("mousemove", (e) => {
-  const rect = noBtn2.getBoundingClientRect();
-  const dx = rect.x - e.clientX;
-  const dy = rect.y - e.clientY;
-  const dist = Math.sqrt(dx*dx + dy*dy);
-
-  if (dist < 120 && document.getElementById("s4").classList.contains("active")) {
-    noBtn2.style.left = rect.x + (dx / dist) * 50 + "px";
-    noBtn2.style.top = rect.y + (dy / dist) * 50 + "px";
-  }
-});
-
 /* FINAL YES */
 function finalYes() {
+  stage = 5;
   show("s5");
+
   hearts();
+  confetti();
+  music();
 }
 
 /* HEARTS */
 function hearts() {
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 50; i++) {
     setTimeout(() => {
       const h = document.createElement("div");
       h.className = "heart";
       h.innerHTML = "💖";
-
       h.style.left = Math.random() * 100 + "vw";
       h.style.top = "80vh";
-
       document.body.appendChild(h);
-      setTimeout(() => h.remove(), 3500);
+      setTimeout(() => h.remove(), 4000);
     }, i * 40);
   }
+}
+
+/* CONFETTI */
+function confetti() {
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.background = ["#ff4d88","#ffd166","#06d6a0","#4cc9f0"][Math.floor(Math.random()*4)];
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3000);
+    }, i * 20);
+  }
+}
+
+/* SIMPLE BACKGROUND MUSIC (NO FILES) */
+function music() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AudioContext();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = 220;
+
+  gain.gain.value = 0.03;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+
+  // soft rising tone
+  let freq = 220;
+  setInterval(() => {
+    freq += 1;
+    osc.frequency.value = freq;
+  }, 200);
 }
 
 </script>
 
 </body>
-</html>
 </html>
