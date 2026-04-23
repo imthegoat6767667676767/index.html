@@ -22,6 +22,26 @@ body {
   align-items: center;
 }
 
+/* CINEMATIC FADE OVERLAY */
+#intro {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  letter-spacing: 2px;
+  z-index: 999;
+  animation: fadeOut 2.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
 /* CARD SYSTEM */
 .card {
   width: 92%;
@@ -35,10 +55,9 @@ body {
 
   position: absolute;
   opacity: 0;
-  transform: scale(0.96) translateY(20px);
+  transform: scale(0.95) translateY(25px);
   pointer-events: none;
-
-  transition: all 0.6s ease;
+  transition: all 0.7s ease;
 }
 
 .card.active {
@@ -53,7 +72,7 @@ h2 { font-size: 22px; font-weight: 400; }
 
 p {
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: #222;
 }
 
@@ -77,7 +96,7 @@ button {
 }
 
 button:hover {
-  transform: scale(1.07);
+  transform: scale(1.08);
 }
 
 .primary {
@@ -90,7 +109,7 @@ button:hover {
   position: fixed;
 }
 
-/* EFFECTS */
+/* HEARTS */
 .heart {
   position: fixed;
   font-size: 18px;
@@ -103,6 +122,7 @@ button:hover {
   100% { transform: translateY(-120vh); opacity: 0; }
 }
 
+/* CONFETTI */
 .confetti {
   position: fixed;
   width: 8px;
@@ -118,10 +138,22 @@ button:hover {
   }
 }
 
+/* TYPE EFFECT CURSOR */
+.type::after {
+  content: "|";
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
 </style>
 </head>
 
 <body>
+
+<!-- INTRO CINEMATIC -->
+<div id="intro">for vis...</div>
 
 <!-- SCREEN 1 -->
 <div class="card active" id="s1">
@@ -145,8 +177,8 @@ button:hover {
 
 <!-- SCREEN 3 -->
 <div class="card" id="s3">
-  <h1>That makes me happy</h1>
-  <p>i really appreciate you.</p>
+  <h1>...</h1>
+  <p id="typeText"></p>
 
   <button class="primary" onclick="next2()">Continue</button>
 </div>
@@ -160,10 +192,9 @@ button:hover {
   <button class="secondary" onclick="finalNo()">No</button>
 </div>
 
-<!-- SCREEN 5 (FINAL YES) -->
+<!-- FINAL YES -->
 <div class="card" id="s5">
   <h1>💖</h1>
-
   <p>
     vis, thank you for everything you do for me and for always being there for me.<br><br>
 
@@ -179,13 +210,10 @@ button:hover {
   </p>
 </div>
 
-<!-- SCREEN 6 (FINAL NO) -->
+<!-- FINAL NO -->
 <div class="card" id="s6">
-  <h1>It’s okay 💭</h1>
-  <p>
-    I understand.<br><br>
-    I still really appreciate you for being honest with me.
-  </p>
+  <h1>It’s okay</h1>
+  <p>I still appreciate you a lot.</p>
 </div>
 
 <script>
@@ -197,6 +225,11 @@ function show(id) {
   document.getElementById(id).classList.add('active');
 }
 
+/* INTRO REMOVE */
+setTimeout(() => {
+  document.getElementById("intro").style.display = "none";
+}, 2500);
+
 /* FLOW */
 function next() {
   stage = 2;
@@ -206,11 +239,25 @@ function next() {
 function yes1() {
   stage = 3;
   show("s3");
+  typeText();
 }
 
 function next2() {
   stage = 4;
   show("s4");
+}
+
+/* TYPEWRITER */
+function typeText() {
+  const text = "i really appreciate you more than you know.";
+  let i = 0;
+  const el = document.getElementById("typeText");
+
+  const interval = setInterval(() => {
+    el.innerHTML += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, 40);
 }
 
 /* FINAL YES */
@@ -220,6 +267,7 @@ function finalYes() {
 
   hearts();
   confetti();
+  audio();
 }
 
 /* FINAL NO */
@@ -236,12 +284,12 @@ function no1() {
   setTimeout(() => {
     stage = 4;
     show("s4");
-  }, 2500);
+  }, 2000);
 }
 
 /* HEARTS */
 function hearts() {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 60; i++) {
     setTimeout(() => {
       const h = document.createElement("div");
       h.className = "heart";
@@ -250,13 +298,13 @@ function hearts() {
       h.style.top = "80vh";
       document.body.appendChild(h);
       setTimeout(() => h.remove(), 4000);
-    }, i * 35);
+    }, i * 30);
   }
 }
 
 /* CONFETTI */
 function confetti() {
-  for (let i = 0; i < 70; i++) {
+  for (let i = 0; i < 80; i++) {
     setTimeout(() => {
       const c = document.createElement("div");
       c.className = "confetti";
@@ -264,8 +312,30 @@ function confetti() {
       c.style.background = ["#ff4d88","#ffd166","#06d6a0","#4cc9f0"][Math.floor(Math.random()*4)];
       document.body.appendChild(c);
       setTimeout(() => c.remove(), 3000);
-    }, i * 20);
+    }, i * 15);
   }
+}
+
+/* SOFT HEARTBEAT AUDIO (NO FILES) */
+function audio() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = 120;
+
+  gain.gain.value = 0.03;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+
+  setInterval(() => {
+    osc.frequency.value = 120 + Math.sin(Date.now() / 300) * 10;
+  }, 100);
 }
 
 </script>
