@@ -9,8 +9,8 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-  color: #333;
   text-align: center;
+  color: #333;
   overflow: hidden;
 }
 
@@ -20,16 +20,12 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   animation: fadeIn 1.5s ease;
+  width: 90%;
+  max-width: 500px;
 }
 
-h1 {
-  font-size: 42px;
-}
-
-p {
-  font-size: 18px;
-  opacity: 0.8;
-}
+h1 { font-size: 40px; }
+p { font-size: 18px; }
 
 img {
   width: 260px;
@@ -58,18 +54,9 @@ button {
   color: white;
 }
 
-#startBtn:hover {
-  background: #ff1a66;
-  transform: scale(1.1);
-}
-
 #yes {
   background: #ff4d88;
   color: white;
-}
-
-#yes:hover {
-  transform: scale(1.1);
 }
 
 #no {
@@ -77,8 +64,8 @@ button {
   position: absolute;
 }
 
-.final {
-  animation: fadeIn 1s ease;
+button:hover {
+  transform: scale(1.1);
 }
 
 @keyframes fadeIn {
@@ -90,12 +77,17 @@ button {
 
 <body>
 
+<!-- 🎵 MUSIC (PUT YOUR LINK BELOW) -->
+<audio autoplay loop>
+  <source src="YOUR_SONG_LINK_HERE" type="audio/mp3">
+</audio>
+
 <div class="container" id="main">
   <h1>Hey Vis 💕</h1>
   <p>I made something for you…</p>
 
-  <!-- PUT YOUR IMAGE LINK HERE -->
-  <img src="https://imgur.com/a/MFae7o1">
+  <!-- 🖼 YOUR IMAGE -->
+  <img src="YOUR_IMAGE_LINK_HERE">
 
   <br><br>
   <button id="startBtn" onclick="start()">Click me 😳</button>
@@ -123,12 +115,21 @@ function moveNo() {
 
 function yes() {
   document.body.innerHTML = `
-    <div class="container final">
+    <div class="container">
       <h1>Vis 💖</h1>
       <h2>I’ve been listening to "Blessed"</h2>
       <p>and thinking about you...</p>
-      <h1 style="margin-top:30px;">Will you be my girlfriend? 🥺</h1>
-      <p>(you don’t really have a choice 😭)</p>
+
+      <h1 style="margin-top:25px;">Will you be my girlfriend? 🥺</h1>
+
+      <p style="margin-top:25px;">
+      vis, thank you for everything you do for me and for always being there for me. <br><br>
+      i really love you, my baby. <br><br>
+      i just want you to be happy every time you’re with me. <br><br>
+      you make my days so much better, and i hope you always keep that smile of yours because it’s irreplaceable. <br><br>
+      and yeah… my bike might still hit you 😭 but i’ll always be there for you. <br><br>
+      i’m never leaving you. ❤️
+      </p>
     </div>
   `;
 }
