@@ -22,7 +22,7 @@ body {
   align-items: center;
 }
 
-/* CINEMATIC FADE OVERLAY */
+/* INTRO */
 #intro {
   position: fixed;
   inset: 0;
@@ -42,7 +42,7 @@ body {
   100% { opacity: 0; visibility: hidden; }
 }
 
-/* CARD SYSTEM */
+/* CARD */
 .card {
   width: 92%;
   max-width: 540px;
@@ -55,7 +55,7 @@ body {
 
   position: absolute;
   opacity: 0;
-  transform: scale(0.95) translateY(25px);
+  transform: scale(0.95) translateY(20px);
   pointer-events: none;
   transition: all 0.7s ease;
 }
@@ -76,12 +76,21 @@ p {
   color: #222;
 }
 
-/* IMAGE */
+/* IMAGES */
 img {
   width: 240px;
   border-radius: 18px;
   margin-top: 15px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+/* “US” PHOTO */
+.us-photo {
+  width: 280px;
+  border-radius: 20px;
+  margin-top: 15px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.4);
 }
 
 /* BUTTONS */
@@ -96,7 +105,7 @@ button {
 }
 
 button:hover {
-  transform: scale(1.08);
+  transform: scale(1.07);
 }
 
 .primary {
@@ -109,7 +118,7 @@ button:hover {
   position: fixed;
 }
 
-/* HEARTS */
+/* EFFECTS */
 .heart {
   position: fixed;
   font-size: 18px;
@@ -122,7 +131,6 @@ button:hover {
   100% { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* CONFETTI */
 .confetti {
   position: fixed;
   width: 8px;
@@ -137,22 +145,12 @@ button:hover {
     opacity: 0;
   }
 }
-
-/* TYPE EFFECT CURSOR */
-.type::after {
-  content: "|";
-  animation: blink 0.7s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
 </style>
 </head>
 
 <body>
 
-<!-- INTRO CINEMATIC -->
+<!-- INTRO -->
 <div id="intro">for vis...</div>
 
 <!-- SCREEN 1 -->
@@ -160,7 +158,7 @@ button:hover {
   <h1>Hey Vis</h1>
   <p>I made something for you.</p>
 
-  <img src="YOUR_DIRECT_IMAGE_LINK.jpg">
+  <img src="https://i.imgur.com/KR7PCEs.jpeg">
 
   <br>
   <button class="primary" onclick="next()">Start</button>
@@ -195,6 +193,7 @@ button:hover {
 <!-- FINAL YES -->
 <div class="card" id="s5">
   <h1>💖</h1>
+
   <p>
     vis, thank you for everything you do for me and for always being there for me.<br><br>
 
@@ -208,6 +207,9 @@ button:hover {
 
     i’m never leaving you. ❤️
   </p>
+
+  <!-- 💕 YOUR “US” PHOTO -->
+  <img class="us-photo" src="https://i.imgur.com/KR7PCEs.jpeg">
 </div>
 
 <!-- FINAL NO -->
@@ -224,11 +226,6 @@ function show(id) {
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
-/* INTRO REMOVE */
-setTimeout(() => {
-  document.getElementById("intro").style.display = "none";
-}, 2500);
 
 /* FLOW */
 function next() {
@@ -267,7 +264,6 @@ function finalYes() {
 
   hearts();
   confetti();
-  audio();
 }
 
 /* FINAL NO */
@@ -314,28 +310,6 @@ function confetti() {
       setTimeout(() => c.remove(), 3000);
     }, i * 15);
   }
-}
-
-/* SOFT HEARTBEAT AUDIO (NO FILES) */
-function audio() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = "sine";
-  osc.frequency.value = 120;
-
-  gain.gain.value = 0.03;
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start();
-
-  setInterval(() => {
-    osc.frequency.value = 120 + Math.sin(Date.now() / 300) * 10;
-  }, 100);
 }
 
 </script>
